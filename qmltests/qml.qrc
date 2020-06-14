@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>tst_graph.qml</file>
+        <file>tst_vertex.qml</file>
+        <file>tst_weight.qml</file>
+        <file>tst_edge.qml</file>
+    </qresource>
+</RCC>

@@ -1,7 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Graph.qml</file>
-        <file>Vertex.qml</file>
+        <file>graph/GraphView.qml</file>
+        <file>graph/Vertex.qml</file>
+        <file>graph/GraphModel.qml</file>
+        <file>graph/Weight.qml</file>
+        <file>graph/WeightInput.qml</file>
+        <file>graph/Edge.qml</file>
     </qresource>
 </RCC>
