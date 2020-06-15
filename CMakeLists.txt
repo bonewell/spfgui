@@ -43,4 +43,5 @@ target_compile_definitions(spfgui
 target_link_libraries(spfgui
   PRIVATE Qt5::Core Qt5::Quick)
 
+enable_testing()
 add_subdirectory(qmltests)
