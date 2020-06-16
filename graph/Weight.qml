@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-WeightInput {
+WeightEditor {
     id: root
 
     property alias maximum: slider.to
@@ -25,7 +25,7 @@ WeightInput {
         to: 50
         from: 1
         stepSize: 1
-        value: 1
+        focus: true
     }
 
     RoundButton {
@@ -34,7 +34,6 @@ WeightInput {
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-
-        onClicked: root.ok(slider.value)
+        onClicked: ok(slider.value)
     }
 }

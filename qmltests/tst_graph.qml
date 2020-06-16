@@ -7,11 +7,8 @@ GraphView {
     id: graph
     anchors.fill: parent
 
-    editor: Weight {
-        function show() {
-            ok(3);
-        }
-    }
+    model: StubModel{}
+    editor: FakeWeight { value: 3 }
 
     SignalSpy {
         id: addVertex

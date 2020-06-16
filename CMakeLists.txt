@@ -29,11 +29,17 @@ find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 if(ANDROID)
     add_library(spfgui SHARED
       main.cpp
+      graph/edgemodel.cpp
+      graph/graphmodel.cpp
+      graph/vertexmodel.cpp
       qml.qrc
     )
 else()
     add_executable(spfgui
       main.cpp
+      graph/edgemodel.cpp
+      graph/graphmodel.cpp
+      graph/vertexmodel.cpp
       qml.qrc
     )
 endif()

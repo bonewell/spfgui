@@ -6,9 +6,12 @@ Rectangle {
     signal couple()
     signal remove()
 
+    property point center: Qt.point(0,0)
     property alias label: label.text
     property color color: "black"
 
+    x: center.x - width / 2
+    y: center.y - height / 2
     border { color: root.color; width: 1 }
     radius: 25
 

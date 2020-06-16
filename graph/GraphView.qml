@@ -8,11 +8,11 @@ Flickable {
 
     property size canvas: Qt.size(width, height)
 
-    property GraphModel model: GraphModel{}
+    property var model
     property alias vertex: vertexes.delegate
     property alias edge: edges.delegate
 
-    property Weight editor: Weight{ anchors.centerIn: parent; visible: false }
+    property WeightEditor editor: Weight{ anchors.centerIn: parent; visible: false }
 
     QtObject {
         id: internal

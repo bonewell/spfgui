@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 
 import "graph"
+import Spf 1.0
 
 Window {
     visible: true
@@ -20,22 +21,23 @@ Window {
 
         model: graph
         vertex: Vertex {
-            x: model.x - width / 2
-            y: model.y - height / 2
+            center: model.center
             label: model.id
             color: model.color
-            onCouple: view.couple(model.index)
-            onRemove: graph.removeVertex(model.index)
+            onCouple: view.couple(model.id)
+            onRemove: graph.removeVertex(model.id)
         }
         edge: Edge {
             label: model.weight
             color: model.color
-            from: Qt.point(model.from.x, model.from.y)
-            to: Qt.point(model.to.x, model.to.y)
-            onRemove: graph.removeEdge(model.index)
+            from: model.from.center
+            to: model.to.center
+            onRemove: graph.removeEdge(model.from.id, model.to.id)
         }
 
         onAddVertex: graph.addVertex(p)
-        onSetEdge: graph.setEdge(from, to, weight)
+        onSetEdge: graph.addEdge(from, to, weight)
     }
+
+    Help {}
 }
