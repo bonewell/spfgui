@@ -7,11 +7,25 @@ EdgeModel::EdgeModel(QObject *parent)
 {
 }
 
-void EdgeModel::add(Edge const& edge)
+QModelIndex EdgeModel::add(Edge const& edge)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    auto row = rowCount();
+    beginInsertRows(QModelIndex(), row, row);
     edges_ << edge;
     endInsertRows();
+    return createIndex(row, 0);
+}
+
+void EdgeModel::ok(QModelIndex const& index)
+{
+    edges_[index.row()].state = "ready";
+    emit dataChanged(index, index);
+}
+
+void EdgeModel::error(QModelIndex const& index)
+{
+    edges_[index.row()].state = "error";
+    emit dataChanged(index, index);
 }
 
 void EdgeModel::remove(int from, int to)
@@ -56,8 +70,8 @@ QVariant EdgeModel::data(QModelIndex const& index, int role) const
         return vertex.to;
     else if (role == WeightRole)
         return vertex.weight;
-    else if (role == ColorRole)
-        return vertex.color;
+    else if (role == StateRole)
+        return vertex.state;
     return QVariant();
 }
 
@@ -66,7 +80,7 @@ QHash<int, QByteArray> EdgeModel::roleNames() const {
     roles[FromRole] = "from";
     roles[ToRole] = "to";
     roles[WeightRole] = "weight";
-    roles[ColorRole] = "color";
+    roles[StateRole] = "state";
     return roles;
 }
 

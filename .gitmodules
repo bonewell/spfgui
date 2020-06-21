@@ -1,0 +1,3 @@
+[submodule "libspfclient"]
+	path = libspfclient
+	url = https://github.com/bonewell/libspfclient.git

@@ -7,7 +7,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Init submodules
+        uses: snickerbockers/submodules-init@v4
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.3.0
         with:

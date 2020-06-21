@@ -2,14 +2,14 @@
 #define VERTEXMODEL_H
 
 #include <QAbstractListModel>
-#include <QColor>
 #include <QList>
 #include <QPointF>
+#include <QString>
 
 struct Vertex {
     int id;
     QPointF center;
-    QColor color{"gray"};
+    QString state;
 };
 
 class VertexModel : public QAbstractListModel
@@ -19,14 +19,16 @@ public:
     enum Roles {
         IdRole = Qt::UserRole + 1,
         CenterRole,
-        ColorRole
+        StateRole
     };
 
     explicit VertexModel(QObject* parent = nullptr);
 
-    void add(Vertex const& vertex);
+    QModelIndex add(QPointF const& center);
+    void ok(QModelIndex const& index, int id);
+    void error(QModelIndex const& index);
     void remove(int id);
-    Vertex const* get(int id) const;
+    Vertex* get(int id);
 
     bool removeRows(int row, int count, QModelIndex const& parent = QModelIndex()) override;
 

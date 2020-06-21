@@ -23,13 +23,13 @@ Window {
         vertex: Vertex {
             center: model.center
             label: model.id
-            color: model.color
+            state: model.state
             onCouple: view.couple(model.id)
             onRemove: graph.removeVertex(model.id)
         }
         edge: Edge {
             label: model.weight
-            color: model.color
+            state: model.state
             from: model.from.center
             to: model.to.center
             onRemove: graph.removeEdge(model.from.id, model.to.id)
