@@ -1,0 +1,19 @@
+language: cpp
+matrix:
+    include:
+        - os: osx
+          osx_image: xcode11.3
+          compiler: clang
+          env:
+              - Qt5_DIR=/usr/local/opt/qt/lib/cmake/Qt5
+              - Qt5QuickTest_DIR=/usr/local/opt/qt/lib/cmake/Qt5QuickTest
+          install:
+              - brew upgrade qt
+              - pip install conan
+              - conan user
+          script:
+              - env
+              - conan install libspfclient --build missing
+              - cmake .
+              - cmake --build .
+              - ctest
