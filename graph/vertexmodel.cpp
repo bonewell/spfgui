@@ -18,15 +18,15 @@ QModelIndex VertexModel::add(QPointF const& center)
 
 void VertexModel::ok(QModelIndex const& index, int id)
 {
-    auto v = get(index.row());
-    v->id = id;
-    v->state = "ready";
+    auto& v = vertexes_[index.row()];
+    v.id = id;
+    v.state = "ready";
     emit dataChanged(index, index);
 }
 
 void VertexModel::error(QModelIndex const& index)
 {
-    get(index.row())->state = "error";
+    vertexes_[index.row()].state = "error";
     emit dataChanged(index, index);
 }
 

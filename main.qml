@@ -12,6 +12,9 @@ Window {
 
     GraphModel {
         id: graph
+//        host: "localhost"
+//        port: 8080
+        async: true
     }
 
     GraphView {

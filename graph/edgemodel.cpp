@@ -47,8 +47,8 @@ void EdgeModel::clear(int id)
                 [id](auto const& e) {
                     return e.from["id"].toInt() == id || e.to["id"].toInt() == id;
             }); it != edges_.end()) {
-                int row = static_cast<int>(std::distance(edges_.begin(), it));
-                removeRow(row);
+            int row = static_cast<int>(std::distance(edges_.begin(), it));
+            removeRow(row);
         }
     }
 }

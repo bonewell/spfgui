@@ -16,6 +16,9 @@ class GraphModel : public QObject
 public:
     explicit GraphModel(QObject* parent = nullptr);
 
+    Q_PROPERTY(QString host MEMBER host_)
+    Q_PROPERTY(unsigned short port MEMBER port_)
+    Q_PROPERTY(bool async MEMBER async_)
     Q_PROPERTY(EdgeModel* edges READ getEdges CONSTANT)
     Q_PROPERTY(VertexModel* vertexes READ getVertexes CONSTANT)
 
@@ -24,12 +27,20 @@ public:
     Q_INVOKABLE void addEdge(int from, int to, int weight);
     Q_INVOKABLE void removeEdge(int from, int to);
 
+signals:
+    void vertexRemoved(int id);
+    void edgeRemoved(int from, int to);
+
 private:
     EdgeModel* getEdges() { return &edges_; }
     VertexModel* getVertexes() { return &vertexes_; }
 
     EdgeModel edges_;
     VertexModel vertexes_;
+
+    QString host_;
+    unsigned short port_;
+    bool async_{false};
 
     spf::WebSocketRpc service_{"localhost", 8080};
     spf::Graph graph_{service_};
