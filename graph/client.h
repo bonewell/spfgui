@@ -6,26 +6,25 @@
 #include "spf/graph.h"
 #include "spf/web_socket_rpc.h"
 
-class EdgeModel;
-class VertexModel;
+class GraphModel;
 
 class Client : public QObject {
     Q_OBJECT
 public:
-    Client(spf::WebSocketRpc& service) : graph_{service} {}
+    Client(QString const& host, unsigned short port, GraphModel& model)
+        : service_{new spf::WebSocketRpc{host.toStdString(), port}},
+          graph_{*service_}, model_{model} {}
+
     virtual ~Client() = default;
     virtual void addVertex(QPointF const& center) = 0;
     virtual void removeVertex(int id) = 0;
     virtual void addEdge(int from, int to, int weight) = 0;
     virtual void remodeEdge(int from, int to) = 0;
 
-    void setEdgeModel(EdgeModel* edges) { edges_ = edges; }
-    void setVertexModel(VertexModel* vertexes) { vertexes_ = vertexes; }
-
 protected:
+    std::unique_ptr<spf::WebSocketRpc> service_;
     spf::Graph graph_;
-    EdgeModel* edges_{nullptr};
-    VertexModel* vertexes_{nullptr};
+    GraphModel& model_;
 };
 
 class SyncClient : public Client {
@@ -41,8 +40,7 @@ public:
 class AsyncClient : public Client {
     Q_OBJECT
 public:
-    using Client::Client;
-    void subscribe();
+    AsyncClient(QString const& host, unsigned short port, GraphModel& model);
     void addVertex(QPointF const& center) override;
     void removeVertex(int id) override;
     void addEdge(int from, int to, int weight) override;

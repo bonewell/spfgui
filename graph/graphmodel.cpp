@@ -2,26 +2,23 @@
 
 #include <QDebug>
 
-#include "spf/graph.h"
-
 #include "client.h"
 
 GraphModel::GraphModel(QObject* parent) : QObject{parent} {}
 
+GraphModel::~GraphModel() = default;
+
 Client& GraphModel::client()
 {
-    if (async_) {
-        static AsyncClient am{service_};
-        am.setVertexModel(&vertexes_);
-        am.setEdgeModel(&edges_);
-        am.subscribe();
-        return am;
-    } else {
-        static SyncClient sm{service_};
-        sm.setVertexModel(&vertexes_);
-        sm.setEdgeModel(&edges_);
-        return sm;
+    // thread-unsafe
+    if (!client_) {
+        if (async_) {
+            client_ = std::make_unique<AsyncClient>(host_, port_, *this);
+        } else {
+            client_ = std::make_unique<SyncClient>(host_, port_, *this);
+        }
     }
+    return *client_;
 }
 
 void GraphModel::addVertex(QPointF const& center)
