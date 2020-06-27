@@ -7,11 +7,27 @@ VertexModel::VertexModel(QObject* parent)
 {
 }
 
-void VertexModel::add(Vertex const& vertex)
+QModelIndex VertexModel::add(QPointF const& center)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    vertexes_ << vertex;
+    auto row = rowCount();
+    beginInsertRows(QModelIndex(), row, row);
+    vertexes_ << Vertex{row, center, "new"};
     endInsertRows();
+    return createIndex(row, 0);
+}
+
+void VertexModel::ok(QModelIndex const& index, int id)
+{
+    auto& v = vertexes_[index.row()];
+    v.id = id;
+    v.state = "ready";
+    emit dataChanged(index, index);
+}
+
+void VertexModel::error(QModelIndex const& index)
+{
+    vertexes_[index.row()].state = "error";
+    emit dataChanged(index, index);
 }
 
 void VertexModel::remove(int id)
@@ -26,10 +42,10 @@ void VertexModel::remove(int id)
     }
 }
 
-Vertex const* VertexModel::get(int id) const
+Vertex* VertexModel::get(int id)
 {
     auto it = std::find_if(vertexes_.begin(), vertexes_.end(),
-                           [&id](auto const& v) {
+                           [id](auto const& v) {
         return v.id == id;
     });
     if (it != vertexes_.end()) {
@@ -53,8 +69,8 @@ QVariant VertexModel::data(QModelIndex const& index, int role) const
         return vertex.id;
     else if (role == CenterRole)
         return vertex.center;
-    else if (role == ColorRole)
-        return vertex.color;
+    else if (role == StateRole)
+        return vertex.state;
     return QVariant();
 }
 
@@ -62,7 +78,7 @@ QHash<int, QByteArray> VertexModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[CenterRole] = "center";
-    roles[ColorRole] = "color";
+    roles[StateRole] = "state";
     return roles;
 }
 

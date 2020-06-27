@@ -8,11 +8,10 @@ Rectangle {
 
     property point center: Qt.point(0,0)
     property alias label: label.text
-    property color color: "black"
 
     x: center.x - width / 2
     y: center.y - height / 2
-    border { color: root.color; width: 1 }
+    border { width: 1 }
     radius: 25
 
     height: radius * 2
@@ -22,7 +21,6 @@ Rectangle {
         id: label
         anchors.fill: parent
 
-        color: root.color
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: root.radius
@@ -35,4 +33,22 @@ Rectangle {
         onClicked: root.couple()
         onDoubleClicked: root.remove()
     }
+
+    states: [
+        State {
+            name: "new"
+            PropertyChanges { target: label; color: "gray" }
+            PropertyChanges { target: root; border.color: "gray" }
+        },
+        State {
+            name: "ready"
+            PropertyChanges { target: label; color: "black" }
+            PropertyChanges { target: root; border.color: "black" }
+        },
+        State {
+            name: "error"
+            PropertyChanges { target: label; color: "red" }
+            PropertyChanges { target: root; border.color: "red" }
+        }
+    ]
 }

@@ -2,9 +2,9 @@
 #define EDGEMODEL_H
 
 #include <QAbstractListModel>
-#include <QColor>
 #include <QList>
 #include <QPointF>
+#include <QString>
 #include <QVariantMap>
 
 struct Vertex;
@@ -13,7 +13,7 @@ struct Edge {
     QVariantMap from;
     QVariantMap to;
     int weight;
-    QColor color{"gray"};
+    QString state{"new"};
 };
 
 class EdgeModel : public QAbstractListModel
@@ -24,12 +24,14 @@ public:
         FromRole = Qt::UserRole + 1,
         ToRole,
         WeightRole,
-        ColorRole
+        StateRole
     };
 
     explicit EdgeModel(QObject* parent = nullptr);
 
-    void add(Edge const& edge);
+    QModelIndex add(Edge const& edge);
+    void ok(QModelIndex const& index);
+    void error(QModelIndex const& index);
     void remove(int from, int to);
     void clear(int id);
 

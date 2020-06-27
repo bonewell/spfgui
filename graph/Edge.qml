@@ -9,7 +9,6 @@ Item {
     property point from
     property point to
 
-    property color color: "black"
     property alias label: label.text
 
     x: Math.min(from.x, to.x)
@@ -24,7 +23,7 @@ Item {
     Shape {
         anchors.fill: parent
         ShapePath {
-            strokeColor: root.color
+            id: line
             startX: root.begin.x
             startY: root.begin.y
             PathLine { x: root.end.x; y: root.end.y }
@@ -39,8 +38,6 @@ Item {
 
         Text {
             id: label
-
-            color: root.color
             font.pixelSize: 15
         }
 
@@ -50,4 +47,22 @@ Item {
             onDoubleClicked: root.remove()
         }
     }
+
+    states: [
+        State {
+            name: "new"
+            PropertyChanges { target: label; color: "gray" }
+            PropertyChanges { target: line; strokeColor: "gray" }
+        },
+        State {
+            name: "ready"
+            PropertyChanges { target: label; color: "black" }
+            PropertyChanges { target: line; strokeColor: "black" }
+        },
+        State {
+            name: "error"
+            PropertyChanges { target: label; color: "red" }
+            PropertyChanges { target: line; strokeColor: "red" }
+        }
+    ]
 }

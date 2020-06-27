@@ -26,28 +26,26 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
+set(SRC
+    main.cpp
+    graph/client.cpp
+    graph/edgemodel.cpp
+    graph/graphmodel.cpp
+    graph/vertexmodel.cpp
+)
+
 if(ANDROID)
-    add_library(spfgui SHARED
-      main.cpp
-      graph/edgemodel.cpp
-      graph/graphmodel.cpp
-      graph/vertexmodel.cpp
-      qml.qrc
-    )
+    add_library(spfgui SHARED ${SRC} qml.qrc)
 else()
-    add_executable(spfgui
-      main.cpp
-      graph/edgemodel.cpp
-      graph/graphmodel.cpp
-      graph/vertexmodel.cpp
-      qml.qrc
-    )
+    add_executable(spfgui ${SRC} qml.qrc)
 endif()
 
 target_compile_definitions(spfgui
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(spfgui
-  PRIVATE Qt5::Core Qt5::Quick)
+  PRIVATE Qt5::Core Qt5::Quick SPF::client)
+
+add_subdirectory(libspfclient)
 
 enable_testing()
 add_subdirectory(qmltests)

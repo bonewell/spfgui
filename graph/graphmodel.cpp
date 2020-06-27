@@ -2,37 +2,41 @@
 
 #include <QDebug>
 
-GraphModel::GraphModel(QObject* parent)
-    : QObject{parent}
+#include "client.h"
+
+GraphModel::GraphModel(QObject* parent) : QObject{parent} {}
+
+GraphModel::~GraphModel() = default;
+
+Client& GraphModel::client()
 {
+    // thread-unsafe
+    if (!client_) {
+        if (async_) {
+            client_ = std::make_unique<AsyncClient>(host_, port_, *this);
+        } else {
+            client_ = std::make_unique<SyncClient>(host_, port_, *this);
+        }
+    }
+    return *client_;
 }
 
-void GraphModel::addVertex(const QPointF &p)
+void GraphModel::addVertex(QPointF const& center)
 {
-    static int id = 0;
-    vertexes_.add({++id, p});
+    client().addVertex(center);
 }
 
 void GraphModel::removeVertex(int id)
 {
-    edges_.clear(id);
-    vertexes_.remove(id);
+    client().removeVertex(id);
 }
 
 void GraphModel::addEdge(int from, int to, int weight)
 {
-    auto vfrom = vertexes_.get(from);
-    auto vto = vertexes_.get(to);
-    if (vfrom && vto) {
-        QVariantMap mfrom{{"id", vfrom->id}, {"center", vfrom->center}};
-        QVariantMap mto{{"id", vto->id}, {"center", vto->center}};
-        edges_.add({mfrom, mto, weight});
-    } else {
-        qDebug() << "no vertex:" << from << to;
-    }
+    client().addEdge(from, to, weight);
 }
 
 void GraphModel::removeEdge(int from, int to)
 {
-    edges_.remove(from, to);
+    client().remodeEdge(from, to);
 }
