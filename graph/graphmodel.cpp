@@ -40,3 +40,13 @@ void GraphModel::removeEdge(int from, int to)
 {
     client().remodeEdge(from, to);
 }
+
+void GraphModel::calculatePath(int from, int to)
+{
+    client().calculatePath(from, to);
+}
+
+bool GraphModel::exists(int from, int id)
+{
+    return edges_.exists(from, id);
+}

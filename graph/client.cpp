@@ -12,6 +12,10 @@ AsyncClient::AsyncClient(const QString &host, unsigned short port, GraphModel &m
     connect(this, &AsyncClient::edgeRemoved, model_.getEdges(), &EdgeModel::remove);
     connect(this, &AsyncClient::vertexRemoved, model_.getEdges(), &EdgeModel::clear);
     connect(this, &AsyncClient::vertexRemoved, model_.getVertexes(), &VertexModel::remove);
+    connect(this, &AsyncClient::path, model_.getEdges(), &EdgeModel::setPath);
+    connect(this, &AsyncClient::path, [this](auto const& ids) {
+        model_.getVertexes()->setPath({std::begin(ids), std::end(ids)});
+    });
 }
 
 void AsyncClient::addVertex(const QPointF &center)
@@ -91,6 +95,18 @@ void AsyncClient::remodeEdge(int from, int to)
     });
 }
 
+void AsyncClient::calculatePath(int from, int to)
+{
+    graph_.path(static_cast<spf::Id>(from), static_cast<spf::Id>(to),
+                [this](auto const& path, auto error) {
+        if (!error) {
+            emit this->path({std::begin(path), std::end(path)});
+        } else {
+            qWarning() << error.what();
+        }
+    });
+}
+
 void SyncClient::addVertex(const QPointF &center)
 {
     auto index = model_.getVertexes()->add(center);
@@ -145,6 +161,18 @@ void SyncClient::remodeEdge(int from, int to)
         graph_.removeEdge(static_cast<spf::Id>(to),
                           static_cast<spf::Id>(from));
         model_.getEdges()->remove(from, to);
+    } catch (std::exception const& e) {
+        qWarning() << e.what();
+    }
+}
+
+void SyncClient::calculatePath(int from, int to)
+{
+    try {
+        auto path = graph_.path(static_cast<spf::Id>(from),
+                                static_cast<spf::Id>(to));
+        model_.getVertexes()->setPath({std::begin(path), std::end(path)});
+        model_.getEdges()->setPath({std::begin(path), std::end(path)});
     } catch (std::exception const& e) {
         qWarning() << e.what();
     }

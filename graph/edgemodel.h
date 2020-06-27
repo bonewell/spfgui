@@ -7,6 +7,8 @@
 #include <QString>
 #include <QVariantMap>
 
+#include <vector>
+
 struct Vertex;
 
 struct Edge {
@@ -34,6 +36,8 @@ public:
     void error(QModelIndex const& index);
     void remove(int from, int to);
     void clear(int id);
+    bool exists(int from, int to);
+    void setPath(std::vector<int> const& path);
 
     bool removeRows(int row, int count, QModelIndex const& parent = QModelIndex()) override;
 

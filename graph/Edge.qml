@@ -63,6 +63,11 @@ Item {
             name: "error"
             PropertyChanges { target: label; color: "red" }
             PropertyChanges { target: line; strokeColor: "red" }
+        },
+        State {
+            name: "path"
+            PropertyChanges { target: label; color: "blue" }
+            PropertyChanges { target: line; strokeColor: "blue"; strokeWidth: 2 }
         }
     ]
 }

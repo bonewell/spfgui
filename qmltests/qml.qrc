@@ -4,7 +4,7 @@
         <file>tst_vertex.qml</file>
         <file>tst_weight.qml</file>
         <file>tst_edge.qml</file>
-        <file>StubModel.qml</file>
+        <file>FakeModel.qml</file>
         <file>FakeWeight.qml</file>
     </qresource>
 </RCC>

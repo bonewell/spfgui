@@ -5,6 +5,7 @@ Flickable {
 
     signal addVertex(point p)
     signal setEdge(int from, int to, int weight)
+    signal getPath(int from, int to)
 
     property size canvas: Qt.size(width, height)
 
@@ -28,16 +29,24 @@ Flickable {
     function couple(id) {
         if (internal.from === -1) {
             internal.from = id;
-        } else {
+        } else if (id !== internal.from &&
+                   !root.model.exists(internal.from, id)) {
             internal.to = id;
-            editor.show()
+            editor.show();
+        }
+    }
+
+    function path(id) {
+        if (internal.from !== -1 && id !== internal.from) {
+            root.getPath(internal.from, id);
+            internal.from = -1;
         }
     }
 
     MouseArea {
         width: root.contentWidth
         height: root.contentHeight
-        onReleased: root.addVertex(Qt.point(mouseX, mouseY))
+        onClicked: root.addVertex(Qt.point(mouseX, mouseY))
     }
 
     Repeater {

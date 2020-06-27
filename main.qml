@@ -27,8 +27,9 @@ Window {
             center: model.center
             label: model.id
             state: model.state
-            onCouple: view.couple(model.id)
             onRemove: graph.removeVertex(model.id)
+            onCouple: view.couple(model.id)
+            onPath: view.path(model.id)
         }
         edge: Edge {
             label: model.weight
@@ -40,6 +41,7 @@ Window {
 
         onAddVertex: graph.addVertex(p)
         onSetEdge: graph.addEdge(from, to, weight)
+        onGetPath: graph.calculatePath(from, to)
     }
 
     Help {}

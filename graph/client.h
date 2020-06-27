@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <vector>
+
 #include "spf/graph.h"
 #include "spf/web_socket_rpc.h"
 
@@ -20,6 +22,7 @@ public:
     virtual void removeVertex(int id) = 0;
     virtual void addEdge(int from, int to, int weight) = 0;
     virtual void remodeEdge(int from, int to) = 0;
+    virtual void calculatePath(int from, int to) = 0;
 
 protected:
     std::unique_ptr<spf::WebSocketRpc> service_;
@@ -35,6 +38,7 @@ public:
     void removeVertex(int id) override;
     void addEdge(int from, int to, int weight) override;
     void remodeEdge(int from, int to) override;
+    void calculatePath(int from, int to) override;
 };
 
 class AsyncClient : public Client {
@@ -45,9 +49,11 @@ public:
     void removeVertex(int id) override;
     void addEdge(int from, int to, int weight) override;
     void remodeEdge(int from, int to) override;
+    void calculatePath(int from, int to) override;
 
 signals:
     void vertexRemoved(int id);
     void edgeRemoved(int from, int to);
+    void path(std::vector<int> const& ids);
 };
 #endif // CLIENT_H

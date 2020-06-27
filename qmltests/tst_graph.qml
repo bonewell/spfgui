@@ -7,8 +7,8 @@ GraphView {
     id: graph
     anchors.fill: parent
 
-    model: StubModel{}
-    editor: FakeWeight { value: 3 }
+    model: FakeModel{}
+    editor: FakeWeight{}
 
     SignalSpy {
         id: addVertex
@@ -36,6 +36,8 @@ GraphView {
         }
 
         function test_set_edge() {
+            model.edgeExists = false;
+            editor.value = 3;
             setEdge.clear();
             graph.couple(1);
             graph.couple(2);

@@ -1,6 +1,7 @@
 #include "edgemodel.h"
 
 #include <algorithm>
+#include <unordered_map>
 
 EdgeModel::EdgeModel(QObject *parent)
     : QAbstractListModel{parent}
@@ -49,6 +50,41 @@ void EdgeModel::clear(int id)
             }); it != edges_.end()) {
             int row = static_cast<int>(std::distance(edges_.begin(), it));
             removeRow(row);
+        }
+    }
+}
+
+bool EdgeModel::exists(int from, int to)
+{
+    auto it = std::find_if(edges_.begin(), edges_.end(),
+                           [from, to] (auto const& e) {
+        return (e.from["id"].toInt() == from && e.to["id"].toInt() == to)
+                || (e.from["id"].toInt() == to && e.to["id"].toInt() == from);
+    });
+    return it != edges_.end();
+}
+
+void EdgeModel::setPath(std::vector<int> const& path)
+{
+    std::unordered_multimap<int, int> ids;
+    for (size_t i = 1; i < path.size(); ++i) {
+        ids.emplace(path[i - 1], path[i]);
+        ids.emplace(path[i], path[i - 1]);
+    }
+    for (auto i = 0; i < edges_.count(); ++i) {
+        auto from = ids.equal_range(edges_[i].from["id"].toInt());
+        auto to = edges_[i].to["id"].toInt();
+        auto found = std::find_if(from.first, from.second, [to](auto const& p) {
+            return p.second == to;
+        });
+        if (found != from.second) {
+            edges_[i].state = "path";
+            auto index = createIndex(i, 0);
+            emit dataChanged(index, index);
+        } else if (edges_[i].state == "path") {
+            edges_[i].state = "ready";
+            auto index = createIndex(i, 0);
+            emit dataChanged(index, index);
         }
     }
 }

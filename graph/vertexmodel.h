@@ -6,6 +6,8 @@
 #include <QPointF>
 #include <QString>
 
+#include <unordered_set>
+
 struct Vertex {
     int id;
     QPointF center;
@@ -29,6 +31,7 @@ public:
     void error(QModelIndex const& index);
     void remove(int id);
     Vertex* get(int id);
+    void setPath(std::unordered_set<int> const& path);
 
     bool removeRows(int row, int count, QModelIndex const& parent = QModelIndex()) override;
 

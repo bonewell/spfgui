@@ -54,6 +54,21 @@ Vertex* VertexModel::get(int id)
     return nullptr;
 }
 
+void VertexModel::setPath(std::unordered_set<int> const& path)
+{
+    for (auto i = 0; i < vertexes_.count(); ++i) {
+        if (path.find(vertexes_[i].id) != std::end(path)) {
+            vertexes_[i].state = "path";
+            auto index = createIndex(i, 0);
+            emit dataChanged(index, index);
+        } else if (vertexes_[i].state == "path") {
+            vertexes_[i].state = "ready";
+            auto index = createIndex(i, 0);
+            emit dataChanged(index, index);
+        }
+    }
+}
+
 int VertexModel::rowCount(QModelIndex const&) const
 {
     return vertexes_.count();

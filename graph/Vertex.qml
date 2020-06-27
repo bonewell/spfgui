@@ -5,6 +5,7 @@ Rectangle {
 
     signal couple()
     signal remove()
+    signal path()
 
     property point center: Qt.point(0,0)
     property alias label: label.text
@@ -32,6 +33,7 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
         onClicked: root.couple()
         onDoubleClicked: root.remove()
+        onPressAndHold: root.path()
     }
 
     states: [
@@ -49,6 +51,11 @@ Rectangle {
             name: "error"
             PropertyChanges { target: label; color: "red" }
             PropertyChanges { target: root; border.color: "red" }
+        },
+        State {
+            name: "path"
+            PropertyChanges { target: label; color: "blue" }
+            PropertyChanges { target: root; border.color: "blue"; border.width: 2 }
         }
     ]
 }

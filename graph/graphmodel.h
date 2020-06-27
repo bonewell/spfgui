@@ -29,6 +29,8 @@ public:
     Q_INVOKABLE void removeVertex(int id);
     Q_INVOKABLE void addEdge(int from, int to, int weight);
     Q_INVOKABLE void removeEdge(int from, int to);
+    Q_INVOKABLE void calculatePath(int from, int to);
+    Q_INVOKABLE bool exists(int from, int id);
 
     EdgeModel* getEdges() { return &edges_; }
     VertexModel* getVertexes() { return &vertexes_; }
