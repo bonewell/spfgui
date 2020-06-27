@@ -28,6 +28,7 @@ find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 set(SRC
     main.cpp
+    graph/client.cpp
     graph/edgemodel.cpp
     graph/graphmodel.cpp
     graph/vertexmodel.cpp

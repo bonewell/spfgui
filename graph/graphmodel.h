@@ -3,11 +3,12 @@
 
 #include <QObject>
 
-#include "spf/graph.h"
 #include "spf/web_socket_rpc.h"
 
 #include "edgemodel.h"
 #include "vertexmodel.h"
+
+class Client;
 
 class GraphModel : public QObject
 {
@@ -27,23 +28,19 @@ public:
     Q_INVOKABLE void addEdge(int from, int to, int weight);
     Q_INVOKABLE void removeEdge(int from, int to);
 
-signals:
-    void vertexRemoved(int id);
-    void edgeRemoved(int from, int to);
-
 private:
     EdgeModel* getEdges() { return &edges_; }
     VertexModel* getVertexes() { return &vertexes_; }
+    Client& client();
 
     EdgeModel edges_;
     VertexModel vertexes_;
 
-    QString host_;
-    unsigned short port_;
+    QString host_{"localhost"};
+    unsigned short port_{8080};
     bool async_{false};
 
     spf::WebSocketRpc service_{"localhost", 8080};
-    spf::Graph graph_{service_};
 };
 
 #endif // GRAPHMODEL_H

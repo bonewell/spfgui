@@ -45,7 +45,7 @@ void VertexModel::remove(int id)
 Vertex* VertexModel::get(int id)
 {
     auto it = std::find_if(vertexes_.begin(), vertexes_.end(),
-                           [&id](auto const& v) {
+                           [id](auto const& v) {
         return v.id == id;
     });
     if (it != vertexes_.end()) {
