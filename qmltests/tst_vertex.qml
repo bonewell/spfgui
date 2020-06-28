@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtTest 1.15
+import QtQuick 2.14
+import QtTest 1.14
 
 import "../graph"
 

@@ -12,8 +12,39 @@ matrix:
               - pip install conan
               - conan user
           script:
-              - env
               - conan install libspfclient --build missing
               - cmake .
               - cmake --build .
               - ctest
+        - os: linux
+          dist: bionic
+          compiler: gcc
+          addons:
+              apt:
+                  sources:
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - g++-9
+                      - libxkbcommon-x11-0
+                      - build-essential
+                      - libgl1-mesa-dev
+          services:
+              - xvfb
+          env:
+              - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+              - Qt5_DIR=/opt/qt514/lib/cmake/Qt5
+              - Qt5QuickTest_DIR=/opt/qt514/lib/cmake/Qt5QuickTest
+          install:
+              - pip install --user conan
+              - conan user
+          script:
+              - env
+              - conan install libspfclient -s compiler.libcxx=libstdc++11 --build missing
+              - cmake .
+              - cmake --build .
+              - ctest
+          before_install:
+              - eval "${MATRIX_EVAL}"
+              - sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
+              - sudo apt-get -q update
+              - sudo apt-get -y install qt514base qt514declarative qt514quickcontrols2
