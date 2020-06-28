@@ -1,25 +1,48 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 
+import "graph"
+import Spf 1.0
+
 Window {
     visible: true
     width: 640
     height: 480
     title: qsTr("SpfGui")
 
-    Graph {
+    GraphModel {
         id: graph
-        anchors.fill: parent
-        anchors.margins: 10
-
-        vertexes: [
-            Vertex{ x: 10; y: 10 },
-            Vertex{ x: 100; y: 100 }
-        ]
+        host: "localhost"
+        port: 8080
+        async: true
     }
 
-    MouseArea {
+    GraphView {
+        id: view
         anchors.fill: parent
-        onClicked: graph.add(mouseX, mouseY)
+        canvas: Qt.size(width * 2, height * 2)
+
+        model: graph
+        vertex: Vertex {
+            center: model.center
+            label: model.id
+            state: model.state
+            onRemove: graph.removeVertex(model.id)
+            onCouple: view.couple(model.id)
+            onPath: view.path(model.id)
+        }
+        edge: Edge {
+            label: model.weight
+            state: model.state
+            from: model.from.center
+            to: model.to.center
+            onRemove: graph.removeEdge(model.from.id, model.to.id)
+        }
+
+        onAddVertex: graph.addVertex(p)
+        onSetEdge: graph.addEdge(from, to, weight)
+        onGetPath: graph.calculatePath(from, to)
     }
+
+    Help {}
 }
