@@ -38,7 +38,6 @@ matrix:
               - pip install --user conan
               - conan user
           script:
-              - env
               - conan install libspfclient -s compiler.libcxx=libstdc++11 --build missing
               - cmake .
               - cmake --build .
@@ -48,3 +47,24 @@ matrix:
               - sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
               - sudo apt-get -q update
               - sudo apt-get -y install qt514base qt514declarative qt514quickcontrols2
+              - sudo apt-get -y install qt514base qt514declarative qt514quickcontrols2
+        - os: windows
+          env: 
+              - PATH=/c/Python38:/c/Python38/Scripts:$PATH
+              - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+              - Qt5_DIR=/opt/qt514/lib/cmake/Qt5
+              - Qt5QuickTest_DIR=/opt/qt514/lib/cmake/Qt5QuickTest
+          before_install:
+              - choco install python --version 3.8.2
+              - python -m pip install --upgrade pip
+              - python -m pip install aqtinstall
+          install:
+              - pip install conan
+              - aqt install 5.15.0 windows desktop win64_msvc2017_64
+          script:
+              - export PATH=$MSBUILD_PATH:$PATH
+              - conan install . -s compiler="Visual Studio" -s compiler.version=15 --build missing
+              - cmake -G "Visual Studio 15 2017 Win64" .
+              - cmake --build . --config Release
+              - ctest -C Release
+              - ctest -C Release
